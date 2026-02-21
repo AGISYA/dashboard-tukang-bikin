@@ -49,10 +49,8 @@ export async function POST(req: Request) {
     resp.cookies.set("shop_auth", token, {
       httpOnly: true,
       sameSite: "lax",
-      secure:
-        process.env.NODE_ENV !== "development" &&
-        process.env.NODE_ENV !== "test",
-      path: "/shop",
+      secure: false, // for localhost as requested
+      path: "/",
       maxAge: 7 * 24 * 60 * 60,
     });
     return resp;

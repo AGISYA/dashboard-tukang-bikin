@@ -12,7 +12,7 @@ export default function UserMenu() {
   useEffect(() => {
     (async () => {
       try {
-        const res = await fetch("/api/auth/me");
+        const res = await fetch("/api/auth/me", { credentials: "include" });
         if (res.ok) {
           const j = await res.json();
           setMe(j);
@@ -34,25 +34,8 @@ export default function UserMenu() {
   }, []);
 
   async function logout() {
-    const path = typeof window !== "undefined" ? window.location.pathname : "";
-    const isAdminArea = [
-      "/dashboard",
-      "/products",
-      "/categories",
-      "/carousel",
-      "/users",
-      "/rooms",
-      "/why",
-      "/business",
-      "/news",
-      "/footer",
-      "/pengguna",
-    ].some((p) =>
-      path.startsWith(p)
-    );
-    const endpoint = isAdminArea ? "/api/auth/logout" : "/api/shop/auth/logout";
-    await fetch(endpoint, { method: "POST" });
-    window.location.href = isAdminArea ? "/login" : "/shop";
+    await fetch("/api/auth/logout", { method: "POST" });
+    window.location.href = "/login";
   }
 
   const initial = (me?.name || me?.phone || "A").charAt(0).toUpperCase();

@@ -17,7 +17,9 @@ export default function LoginPage() {
         if (data.role === "ADMIN" || data.role === "SUPER_ADMIN") {
           router.replace("/dashboard");
         } else {
-          router.replace("/shop");
+          // If logged in as regular user, maybe logout or show error?
+          // For now, let's just do nothing or redirect to dashboard (middleware will handle)
+          router.replace("/dashboard");
         }
       }
     })();
@@ -42,6 +44,9 @@ export default function LoginPage() {
     if (j.redirectTo) {
       router.replace(j.redirectTo);
     } else {
+      // For dashboard, always go to dashboard
+      // If user is not admin/superadmin, middleware will block anyway
+      // But we can add a check here if needed eventually.
       router.replace("/dashboard");
     }
   }

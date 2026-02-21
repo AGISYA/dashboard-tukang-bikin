@@ -37,7 +37,7 @@ export async function PUT(req: NextRequest) {
           title: String(body.title ?? "Shop for Business"),
           description: String(body.description ?? ""),
           buttonText: String(body.buttonText ?? "Shop now"),
-          buttonLink: String(body.buttonLink ?? "/shop"),
+          buttonLink: String(body.buttonLink ?? "/"),
           imageUrl: body.imageUrl ?? null,
           active: body.active ?? true,
         },

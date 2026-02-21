@@ -89,7 +89,7 @@ model BusinessPromo {
   title       String   @default("Shop for Business")
   description String   @default("")
   buttonText  String   @default("Shop now")
-  buttonLink  String   @default("/shop")
+  buttonLink  String   @default("/")
   imageUrl    String?
   active      Boolean  @default(true)
   createdAt   DateTime @default(now())

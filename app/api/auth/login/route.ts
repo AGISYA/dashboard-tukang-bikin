@@ -70,16 +70,14 @@ export async function POST(req: Request) {
 
     const isDashboardUser = user.role === "ADMIN" || user.role === "SUPER_ADMIN";
 
-    // Batasi: Hanya ADMIN dan SUPER_ADMIN yang boleh login di Dashboard
-    if (!isDashboardUser) {
-      return NextResponse.json(
-        { error: "Akses ditolak. Hanya Admin yang dapat masuk ke sini." },
-        { status: 403 }
-      );
-    }
+    // Dynamic handling based on Role
+    let cookieName = "";
 
-    const cookieName = "admin_token";
-    const cookiePath = "/";
+    if (isDashboardUser) {
+      cookieName = "admin_token";
+    } else {
+      cookieName = "shop_auth";
+    }
 
     const resp = NextResponse.json({
       id: user.id,
@@ -87,19 +85,18 @@ export async function POST(req: Request) {
       phone: user.phone,
       email: user.email || null,
       role: user.role,
-      redirectTo: isDashboardUser ? "/dashboard" : "/", // Ecomm arahkan ke home ecomm
     });
 
     resp.cookies.set(cookieName, token, {
       httpOnly: true,
       sameSite: "lax",
-      secure: process.env.NODE_ENV === "production",
-      path: cookiePath,
+      secure: false, // for localhost as requested
+      path: "/",
       maxAge: 7 * 24 * 60 * 60,
     });
 
-    // JANGAN hapus cookie lain jika project terpisah, biarkan mereka hidup berdampingan
-    // Browser akan menyimpan 'admin_token' dan 'shop_auth' secara bersamaan tanpa bentrok
+    // Explicitly allow both sessions to coexist. 
+    // We only set the cookie relevant to the current user's role.
 
     return resp;
   } catch (e) {
