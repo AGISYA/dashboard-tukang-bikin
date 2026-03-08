@@ -5,7 +5,10 @@ export function useDeleteProduct() {
   return useMutation({
     mutationFn: async (id: string) => {
       const res = await fetch(`/api/products/${id}`, { method: "DELETE" });
-      if (!res.ok) throw new Error("Gagal menghapus produk");
+      if (!res.ok) {
+        const errorData = await res.json().catch(() => ({}));
+        throw new Error(errorData.error || "Gagal menghapus produk");
+      }
       return res.json();
     },
     onSuccess: () => {

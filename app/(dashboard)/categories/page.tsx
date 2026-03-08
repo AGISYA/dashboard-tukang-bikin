@@ -20,7 +20,10 @@ export default function CategoriesPage() {
 
   function onDelete(id: string) {
     if (confirm("Are you sure you want to delete this category?")) {
-      del.mutate(id, { onSuccess: () => refetch() });
+      del.mutate(id, {
+        onSuccess: () => refetch(),
+        onError: (err: any) => alert(err.message),
+      });
     }
   }
 

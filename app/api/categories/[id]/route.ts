@@ -34,6 +34,19 @@ export async function PUT(req: NextRequest, { params }: Ctx) {
 
 export async function DELETE(_: NextRequest, { params }: Ctx) {
   const { id } = await params;
-  await prisma.category.delete({ where: { id } });
-  return NextResponse.json({ ok: true });
+  try {
+    await prisma.category.delete({ where: { id } });
+    return NextResponse.json({ ok: true });
+  } catch (error: any) {
+    if (error.code === "P2003") {
+      return NextResponse.json(
+        { error: "Kategori tidak bisa dihapus karena masih memiliki produk." },
+        { status: 400 }
+      );
+    }
+    return NextResponse.json(
+      { error: "Gagal menghapus kategori" },
+      { status: 500 }
+    );
+  }
 }

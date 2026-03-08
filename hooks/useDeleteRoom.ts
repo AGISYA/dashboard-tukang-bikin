@@ -5,7 +5,10 @@ export function useDeleteRoom() {
   return useMutation({
     mutationFn: async (id: string) => {
       const res = await fetch(`/api/rooms/${id}`, { method: "DELETE" });
-      if (!res.ok) throw new Error("Gagal menghapus ruangan");
+      if (!res.ok) {
+        const errorData = await res.json().catch(() => ({}));
+        throw new Error(errorData.error || "Gagal menghapus ruangan");
+      }
       return res.json();
     },
     onSuccess: () => {

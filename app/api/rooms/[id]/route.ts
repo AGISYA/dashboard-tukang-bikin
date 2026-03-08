@@ -39,6 +39,21 @@ export async function PUT(req: NextRequest, { params }: Ctx) {
 
 export async function DELETE(_: NextRequest, { params }: Ctx) {
   const { id } = await params;
-  await prisma.$executeRawUnsafe(`DELETE FROM "Room" WHERE "id" = $1`, id);
-  return NextResponse.json({ ok: true });
+  try {
+    await prisma.$executeRawUnsafe(`DELETE FROM "Room" WHERE "id" = $1`, id);
+    return NextResponse.json({ ok: true });
+  } catch (error: any) {
+    // Check if it's a foreign key violation (usually P2003 in Prisma or specific codes in PG)
+    // Since it's raw SQL, we might need to check various error properties
+    if (error.code === "P2003" || String(error).includes("foreign key")) {
+      return NextResponse.json(
+        { error: "Ruangan tidak bisa dihapus karena masih digunakan oleh produk." },
+        { status: 400 }
+      );
+    }
+    return NextResponse.json(
+      { error: "Gagal menghapus ruangan" },
+      { status: 500 }
+    );
+  }
 }

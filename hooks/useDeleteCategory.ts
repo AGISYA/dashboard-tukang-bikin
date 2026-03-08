@@ -5,7 +5,10 @@ export function useDeleteCategory() {
   return useMutation({
     mutationFn: async (id: string) => {
       const res = await fetch(`/api/categories/${id}`, { method: "DELETE" });
-      if (!res.ok) throw new Error("Gagal menghapus kategori");
+      if (!res.ok) {
+        const errorData = await res.json().catch(() => ({}));
+        throw new Error(errorData.error || "Gagal menghapus kategori");
+      }
       return res.json();
     },
     onSuccess: () => {

@@ -15,7 +15,12 @@ export default function RoomsPage() {
     router.push(`/rooms/${id}/edit`);
   }
   function onDelete(id: string) {
-    del.mutate(id, { onSuccess: () => refetch() });
+    if (confirm("Are you sure you want to delete this room?")) {
+      del.mutate(id, {
+        onSuccess: () => refetch(),
+        onError: (err: any) => alert(err.message),
+      });
+    }
   }
   return (
     <div className="space-y-6">

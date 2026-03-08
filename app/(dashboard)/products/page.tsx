@@ -30,7 +30,10 @@ export default function ProductsPage() {
 
   function handleDelete(id: string) {
     if (confirm("Are you sure you want to delete this product?")) {
-      del.mutate(id, { onSuccess: () => refetch() });
+      del.mutate(id, {
+        onSuccess: () => refetch(),
+        onError: (err: any) => alert(err.message),
+      });
     }
   }
 
