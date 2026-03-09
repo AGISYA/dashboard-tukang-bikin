@@ -1,0 +1,16 @@
+# .dockerignore
+node_modules
+.next
+.git
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+Dockerfile
+README.md
+LICENSE
+.npmrc
+.yarnrc
+.gitignore
+.dockerignore
