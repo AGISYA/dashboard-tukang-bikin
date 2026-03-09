@@ -115,6 +115,32 @@ export async function getAdminAuthTokenFromCookies() {
   return c.get(ADMIN_COOKIE)?.value ?? null;
 }
 
+export async function setShopAuthCookie(token: string) {
+  const c = await cookies();
+  c.set({
+    name: SHOP_COOKIE,
+    value: token,
+    httpOnly: true,
+    sameSite: "lax",
+    secure: process.env.NODE_ENV === "production",
+    path: "/",
+    maxAge: AUTH_MAX_AGE,
+  });
+}
+
+export async function clearShopAuthCookie() {
+  const c = await cookies();
+  c.set({
+    name: SHOP_COOKIE,
+    value: "",
+    httpOnly: true,
+    sameSite: "lax",
+    secure: process.env.NODE_ENV === "production",
+    path: "/",
+    maxAge: 0,
+  });
+}
+
 
 export async function redirectToLoginIfNoAuth(pathname: string) {
   const token = await getAdminAuthTokenFromCookies();
